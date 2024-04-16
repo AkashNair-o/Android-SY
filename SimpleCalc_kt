@@ -1,0 +1,242 @@
+package com.example.simplecalculator
+
+import android.os.Bundle
+import android.widget.Button
+import android.widget.ImageButton
+import android.widget.TextView
+import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
+
+class MainActivity : AppCompatActivity() {
+
+    lateinit var result_id: TextView
+    lateinit var zero_btn: Button
+    lateinit var one_btn: Button
+    lateinit var two_btn: Button
+    lateinit var three_btn: Button
+    lateinit var four_btn: Button
+    lateinit var five_btn: Button
+    lateinit var six_btn: Button
+    lateinit var seven_btn: Button
+    lateinit var eight_btn: Button
+    lateinit var nine_btn: Button
+    lateinit var dot_btn: Button
+    lateinit var clear_everything_btn: Button
+    lateinit var clear_btn: Button
+    lateinit var equal_btn: Button
+    lateinit var multipy_btn: Button
+    lateinit var divide_btn: Button
+    lateinit var subtract_btn: Button
+    lateinit var addition_btn: Button
+    lateinit var backspace_btn: ImageButton
+
+    var digit_on_screen = StringBuilder()
+    var operation: Char = ' '
+    var leftHandSide: Double = 0.0
+    var rightHandSide: Double = 0.0
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_main)
+
+        initializeButtons()
+    }
+
+    private fun initializeButtons() {
+
+        result_id = findViewById<TextView>(R.id.result_id)
+        result_id.text = "0"
+
+        zero_btn = findViewById<Button>(R.id.zero_btn)
+        one_btn = findViewById<Button>(R.id.one_btn)
+        two_btn = findViewById<Button>(R.id.two_btn)
+        three_btn = findViewById<Button>(R.id.three_btn)
+        four_btn = findViewById<Button>(R.id.four_btn)
+        five_btn = findViewById<Button>(R.id.five_btn)
+        six_btn = findViewById<Button>(R.id.six_btn)
+        seven_btn = findViewById<Button>(R.id.seven_btn)
+        eight_btn = findViewById<Button>(R.id.eight_btn)
+        nine_btn = findViewById<Button>(R.id.nine_btn)
+        dot_btn = findViewById<Button>(R.id.dot_btn)
+        clear_everything_btn = findViewById<Button>(R.id.clear_everything_btn)
+        clear_btn = findViewById<Button>(R.id.clear_btn)
+        equal_btn = findViewById<Button>(R.id.equal_btn)
+        multipy_btn = findViewById<Button>(R.id.multipy_btn)
+        divide_btn = findViewById<Button>(R.id.divide_btn)
+        subtract_btn = findViewById<Button>(R.id.subtract_btn)
+        addition_btn = findViewById<Button>(R.id.addition_btn)
+
+        backspace_btn = findViewById<ImageButton>(R.id.backspace_btn)
+
+        functionalButtons()
+        operationalButtons()
+        numericalButtons()
+    }
+
+    private fun functionalButtons() {
+
+        clear_everything_btn.setOnClickListener {
+            digit_on_screen.clear()
+            result_id.text = "0"
+        }
+
+        clear_btn.setOnClickListener {
+
+            if (digit_on_screen.length <= 0) {
+                return@setOnClickListener
+            } else {
+                clearDigit()
+            }
+        }
+
+        backspace_btn.setOnClickListener {
+            if (digit_on_screen.length <= 0) {
+                return@setOnClickListener
+            } else {
+                clearDigit()
+            }
+        }
+
+        equal_btn.setOnClickListener {
+            performMathOperation()
+        }
+
+    }
+
+    private fun operationalButtons() {
+
+        addition_btn.setOnClickListener {
+            selectOperation('A')
+        }
+
+        subtract_btn.setOnClickListener {
+            selectOperation('S')
+        }
+
+        divide_btn.setOnClickListener {
+            selectOperation('D')
+        }
+
+        multipy_btn.setOnClickListener {
+            selectOperation('M')
+        }
+    }
+
+    private fun numericalButtons() {
+
+        one_btn.setOnClickListener {
+            appendToDigitOnScreen("1")
+        }
+
+        two_btn.setOnClickListener {
+            appendToDigitOnScreen("2")
+        }
+
+        three_btn.setOnClickListener {
+            appendToDigitOnScreen("3")
+        }
+
+        four_btn.setOnClickListener {
+            appendToDigitOnScreen("4")
+        }
+
+        five_btn.setOnClickListener {
+            appendToDigitOnScreen("5")
+        }
+
+        six_btn.setOnClickListener {
+            appendToDigitOnScreen("6")
+        }
+
+        seven_btn.setOnClickListener {
+            appendToDigitOnScreen("7")
+        }
+
+        eight_btn.setOnClickListener {
+            appendToDigitOnScreen("8")
+        }
+
+        nine_btn.setOnClickListener {
+            appendToDigitOnScreen("9")
+        }
+
+        zero_btn.setOnClickListener {
+            appendToDigitOnScreen("0")
+        }
+
+        dot_btn.setOnClickListener {
+            appendToDigitOnScreen(".")
+        }
+    }
+
+
+    private fun appendToDigitOnScreen(digit: String) {
+
+        // Add each digit to our string builder
+        digit_on_screen.append(digit)
+
+        // display it on the screen of our mobile app
+        result_id.text = digit_on_screen.toString()
+    }
+
+    private fun selectOperation(c: Char) {
+
+        operation = c
+        leftHandSide = digit_on_screen.toString().toDouble()
+        digit_on_screen.clear()
+        result_id.text = "0"
+    }
+
+    private fun performMathOperation() {
+
+        rightHandSide = digit_on_screen.toString().toDouble()
+
+        when (operation) {
+
+            'A' -> {
+                val sum = OperationsHelper.add(leftHandSide, rightHandSide)
+                result_id.text = sum.toString()
+                digit_on_screen.clear()
+                digit_on_screen.append(sum)
+            }
+            'S' -> {
+                val subtract = OperationsHelper.subtract(leftHandSide, rightHandSide)
+                result_id.text = subtract.toString()
+                digit_on_screen.clear()
+                digit_on_screen.append(subtract)
+            }
+            'M' -> {
+                val multiply = OperationsHelper.multiply(leftHandSide, rightHandSide)
+                result_id.text = multiply.toString()
+                digit_on_screen.clear()
+                digit_on_screen.append(multiply)
+            }
+            'D' -> {
+                val divide = OperationsHelper.divide(leftHandSide, rightHandSide)
+                result_id.text = divide.toString()
+                digit_on_screen.clear()
+                digit_on_screen.append(divide)
+            }
+
+        }
+
+    }
+
+    private fun clearDigit() {
+
+        val length = digit_on_screen.length
+
+        digit_on_screen.deleteCharAt(length - 1)
+        if (length <= 0) {
+            result_id.text = "0"
+        }else{
+            result_id.text = digit_on_screen.toString()
+        }
+
+
+    }
+
+
+
+}
