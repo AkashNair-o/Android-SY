@@ -178,4 +178,5 @@ val gridView: GridView = findViewById(R.id.gridView)
 
         // Set the adapter to the GridView
         gridView.adapter = adapter
+hello sir
 
